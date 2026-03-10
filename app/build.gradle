@@ -8,7 +8,7 @@ android {
 
     defaultConfig {
         applicationId "cn.dorimu.lsp.wakeuphelper"
-        minSdk 21
+        minSdk 24
         targetSdk 35
         versionCode 2
         versionName "1.1.0-wakeup-6.1.30"
