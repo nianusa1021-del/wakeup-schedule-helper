@@ -19,6 +19,14 @@ public final class WakeupAdsHook implements IXposedHookLoadPackage {
     private static final int BLOCK_CODE = -10086;
     private static final String BLOCK_MSG = "blocked by wakeup-lsp";
 
+    private static Class<?> findClass(String className, ClassLoader cl) {
+        try {
+            return XposedHelpers.findClass(className, cl);
+        } catch (Throwable ignored) {
+            return null;
+        }
+    }
+
     @Override
     public void handleLoadPackage(XC_LoadPackage.LoadPackageParam lpparam) {
         if (!TARGET_PACKAGE.equals(lpparam.packageName)) {
@@ -420,13 +428,7 @@ public final class WakeupAdsHook implements IXposedHookLoadPackage {
         }
     }
 
-    private static Class<?> findClass(String className, ClassLoader cl) {
-        try {
-            return XposedHelpers.findClass(className, cl);
-        } catch (Throwable ignored) {
-            return null;
-        }
-    }
+
 
     private static void callMethodSafe(Object receiver, String method, Object... args) {
         try {
