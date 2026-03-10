@@ -31,7 +31,7 @@ public final class WakeupAdsHook implements IXposedHookLoadPackage {
         hookBottomNavigation(lpparam.classLoader);
     }
 
-    private void hookAppLevel(ClassLoader cl) {
+    private static void hookAppLevel(ClassLoader cl) {
         Class<?> lifecycleClass = findClass("androidx.lifecycle.Lifecycle", cl);
         Class<?> splashCallbackClass = findClass("o00oOo0o.o0Oo0oo", cl);
         if (lifecycleClass != null && splashCallbackClass != null) {
@@ -123,7 +123,7 @@ public final class WakeupAdsHook implements IXposedHookLoadPackage {
                 });
     }
 
-    private void hookFastAdCore(ClassLoader cl) {
+    private static void hookFastAdCore(ClassLoader cl) {
         // 聚合 SDK 总初始化
         hookAllMethods("com.homework.fastad.FastAdSDK", cl, "OooOOo", new XC_MethodHook() {
             @Override
@@ -256,7 +256,7 @@ public final class WakeupAdsHook implements IXposedHookLoadPackage {
         hookAdnInitWithFail(cl, "com.fastad.p609ks.FastAdKsManager", "initKsSdk");
     }
 
-    private void hookThirdPartySdk(ClassLoader cl) {
+    private static void hookThirdPartySdk(ClassLoader cl) {
         // 穿山甲
         hookMethod("com.bytedance.sdk.openadsdk.TTAdSdk", cl, "init",
                 Context.class, findClass("com.bytedance.sdk.openadsdk.TTAdConfig", cl),
@@ -372,7 +372,7 @@ public final class WakeupAdsHook implements IXposedHookLoadPackage {
         });
     }
 
-    private void hookAdnInitWithFail(ClassLoader cl, String className, String methodName) {
+    private static void hookAdnInitWithFail(ClassLoader cl, String className, String methodName) {
         Class<?> callbackClass = findClass("com.homework.fastad.util.OooO00o", cl);
         if (callbackClass == null) {
             return;
@@ -439,7 +439,7 @@ public final class WakeupAdsHook implements IXposedHookLoadPackage {
         XposedBridge.log("[WakeupLsp] " + msg);
     }
 
-    private void hookBottomNavigation(ClassLoader cl) {
+    private static void hookBottomNavigation(ClassLoader cl) {
         // Hook 主 Activity 的 onCreate 方法来隐藏底部导航栏
         try {
             Class<?> mainActivityClass = findClass("com.suda.yzune.wakeupschedule.MainActivity", cl);
@@ -475,7 +475,7 @@ public final class WakeupAdsHook implements IXposedHookLoadPackage {
         }
     }
 
-    private void hookNavigationFragment(ClassLoader cl) {
+    private static void hookNavigationFragment(ClassLoader cl) {
         // 尝试 Hook Navigation Fragment 容器来移除底部导航栏
         Class<?> navHostFragmentClass = findClass("androidx.navigation.fragment.NavHostFragment", cl);
         if (navHostFragmentClass != null) {
@@ -496,13 +496,13 @@ public final class WakeupAdsHook implements IXposedHookLoadPackage {
         }
     }
 
-    private void hideBottomNavigationView(Activity activity) {
+    private static void hideBottomNavigationView(Activity activity) {
         // 查找并隐藏 BottomNavigationView
         android.view.View rootView = activity.getWindow().getDecorView();
         hideBottomNavigationInView(rootView);
     }
 
-    private void hideBottomNavigationInView(android.view.View view) {
+    private static void hideBottomNavigationInView(android.view.View view) {
         // 递归查找 BottomNavigationView
         if (view instanceof android.view.ViewGroup) {
             android.view.ViewGroup viewGroup = (android.view.ViewGroup) view;
@@ -537,7 +537,7 @@ public final class WakeupAdsHook implements IXposedHookLoadPackage {
         }
     }
 
-    private android.view.View findViewByType(android.view.ViewGroup parent, String className) {
+    private static android.view.View findViewByType(android.view.ViewGroup parent, String className) {
         for (int i = 0; i < parent.getChildCount(); i++) {
             android.view.View child = parent.getChildAt(i);
             if (child.getClass().getName().equals(className)) {
@@ -553,7 +553,7 @@ public final class WakeupAdsHook implements IXposedHookLoadPackage {
         return null;
     }
 
-    private android.view.View findViewByResourceName(android.view.ViewGroup parent, String resourceName) {
+    private static android.view.View findViewByResourceName(android.view.ViewGroup parent, String resourceName) {
         for (int i = 0; i < parent.getChildCount(); i++) {
             android.view.View child = parent.getChildAt(i);
             try {
@@ -574,7 +574,7 @@ public final class WakeupAdsHook implements IXposedHookLoadPackage {
         return null;
     }
 
-    private void findAndHideBottomNavigationContainer(android.view.ViewGroup parent) {
+    private static void findAndHideBottomNavigationContainer(android.view.ViewGroup parent) {
         // 查找可能包含底部导航的容器（通常是底部有固定高度的布局）
         for (int i = 0; i < parent.getChildCount(); i++) {
             android.view.View child = parent.getChildAt(i);
@@ -611,7 +611,7 @@ public final class WakeupAdsHook implements IXposedHookLoadPackage {
         }
     }
 
-    private void adjustParentLayout(android.view.View view) {
+    private static void adjustParentLayout(android.view.View view) {
         // 调整父布局参数，使内容区域扩展
         android.view.View parent = (android.view.View) view.getParent();
         if (parent instanceof android.view.ViewGroup) {
@@ -628,7 +628,7 @@ public final class WakeupAdsHook implements IXposedHookLoadPackage {
         }
     }
 
-    private void adjustSiblingLayout(android.view.View view) {
+    private static void adjustSiblingLayout(android.view.View view) {
         // 调整视图的布局参数以占据全屏
         android.view.ViewGroup.LayoutParams params = view.getLayoutParams();
         
@@ -653,7 +653,7 @@ public final class WakeupAdsHook implements IXposedHookLoadPackage {
         }
     }
 
-    private void adjustLayoutForFullScreen(Activity activity) {
+    private static void adjustLayoutForFullScreen(Activity activity) {
         // 确保内容区域占据全屏的备用方法
         android.view.View contentView = activity.findViewById(android.R.id.content);
         if (contentView != null) {
